@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Switch : MonoBehaviour {
 	private bool pressed = false;
+	private List <GameObject> objsOnSwitch = new List <GameObject> ();
 	private GameObject tileSwitch;
 	private Vector3 position;
 	private Vector3 origPosition;
@@ -41,10 +43,14 @@ public class Switch : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other) {
+		objsOnSwitch.Add (other.gameObject); 
 		pressed = true; 
 	}
 
 	void OnTriggerExit (Collider other) {
-		pressed = false;
+		objsOnSwitch.Remove (other.gameObject);
+		if (objsOnSwitch.Count == 0) {
+			pressed = false;
+		}
 	}
 }

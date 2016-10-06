@@ -7,7 +7,7 @@ public class Lock : MonoBehaviour {
 	private GameObject door;
 	private Vector3 doorPos;
 	private Vector3 finalPos;
-	private bool open;
+	private bool open = false;
 
 	// Use this for initialization
 	void Start () {

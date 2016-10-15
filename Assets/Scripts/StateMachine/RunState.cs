@@ -15,15 +15,15 @@ public class RunState : IPlayerState {
 	}
 
 	public void ToIdleState () {
-
+		player.currentState = player.idleState;
 	}
 
 	public void ToWalkState () {
-
+		player.currentState = player.walkState;
 	}
 
 	public void ToRunState () {
-
+		Debug.Log ("Whoops... You can't go from one state to the same state (run)");
 	}
 
 	private void Look () {

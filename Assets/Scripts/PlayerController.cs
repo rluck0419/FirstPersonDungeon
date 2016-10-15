@@ -176,24 +176,6 @@ public class PlayerController : MonoBehaviour {
 		
 		Ray ray = mainCamera.GetComponent<Camera>().ScreenPointToRay(new Vector3(x,y));
 		RaycastHit hit;
-		// if (Physics.Raycast(ray, out hit)) {
-			
-		// 	p = hit.collider.GetComponent<Pickupable>();
-
-		// 	if (p != null) {
-		// 		hitColliders = Physics.OverlapSphere(mainCamera.transform.position, pickupRadius);
-		// 		foreach (Collider i in hitColliders) {
-		// 			if (i.gameObject == p.gameObject) {
-		// 				ps = hit.collider.GetComponent<ParticleSystem>();
-		// 				pse = ps.emission;
-		// 				if (ps != null && pse.enabled == false) {
-		// 					inRangeObject = p.gameObject;
-		// 					pse.enabled = true;
-		// 				}
-		// 			}	
-		// 		}
-		// 	}
-		// }
 
 		if (Input.GetMouseButtonDown(0)) {
 			if (Physics.Raycast(ray, out hit)) {

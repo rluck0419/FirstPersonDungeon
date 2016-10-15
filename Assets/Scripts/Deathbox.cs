@@ -6,7 +6,7 @@ public class Deathbox : MonoBehaviour {
 	public Vector3 keyReset;
 
 	void Start () {
-	
+		
 	}
 
 	void OnTriggerEnter (Collider deadObject) {

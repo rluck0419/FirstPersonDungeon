@@ -15,6 +15,7 @@ public class WalkState : IPlayerState {
 	}
 
 	public void ToIdleState () {
+		Debug.Log ("player is now in idle state");
 		player.currentState = player.idleState;
 	}
 
@@ -23,6 +24,7 @@ public class WalkState : IPlayerState {
 	}
 
 	public void ToRunState () {
+		Debug.Log ("player is now in run state");
 		player.currentState = player.runState;
 	}
 
@@ -50,5 +52,8 @@ public class WalkState : IPlayerState {
 		player.moveDirection.y = 0f;
 
 		controller.Move(player.moveDirection * Time.deltaTime);
+
+		if (player.moveDirection.x == 0 && player.moveDirection.z == 0)
+			ToIdleState ();
 	}
 }

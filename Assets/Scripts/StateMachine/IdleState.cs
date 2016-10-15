@@ -18,10 +18,12 @@ public class IdleState : IPlayerState {
 	}
 
 	public void ToWalkState () {
+		Debug.Log ("player is now in walk state");
 		player.currentState = player.walkState;
 	}
 
 	public void ToRunState () {
+		Debug.Log ("player is now in run state");
 		player.currentState = player.runState;
 	}
 
@@ -38,7 +40,7 @@ public class IdleState : IPlayerState {
 		player.lookDirection =  new Vector3 (-1 * mouseVertical, mouseHorizontal, 0f);
 		player.gameObject.transform.eulerAngles = player.lookDirection + newRotation;
 
-		if (Input.GetAxis ("Horizontal") > 0 || Input.GetAxis ("Vertical") > 0)
+		if (Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)
 			ToWalkState ();
 	}
 }

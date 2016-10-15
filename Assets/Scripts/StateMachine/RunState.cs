@@ -15,10 +15,12 @@ public class RunState : IPlayerState {
 	}
 
 	public void ToIdleState () {
+		Debug.Log ("player is now in idle state");
 		player.currentState = player.idleState;
 	}
 
 	public void ToWalkState () {
+		Debug.Log ("player is now in walk state");
 		player.currentState = player.walkState;
 	}
 

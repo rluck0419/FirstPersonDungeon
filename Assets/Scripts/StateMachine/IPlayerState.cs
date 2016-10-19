@@ -9,6 +9,4 @@ public interface IPlayerState {
 
 	void ToWalkState ();
 
-	void ToRunState ();
-
 }

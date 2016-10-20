@@ -11,6 +11,7 @@ public class IdleState : IPlayerState {
 
 	public void UpdateState () {
 		Look ();
+		Jump ();
 	}
 
 	public void ToIdleState () {
@@ -63,5 +64,11 @@ public class IdleState : IPlayerState {
 		player.mainCamera.transform.localRotation = yRotation;
 
 		player.mainCamera.transform.localRotation *= targetOrientation;
+	}
+
+	private void Jump () {
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			player.rigidbody.velocity = Vector3.up * 10f;
+		}
 	}
 }

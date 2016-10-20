@@ -10,6 +10,7 @@ public class StatePatternPlayer : MonoBehaviour {
 	public Vector2 clampInDegrees = new Vector2(360, 180);
 	public Vector2 sensitivity = new Vector2(2, 2);
 	public Vector2 smoothing = new Vector2(3, 3);
+	public Rigidbody rigidbody;
 	[HideInInspector] public Vector2 targetDirection;
 	[HideInInspector] public Vector2 mouseAbsolute;
 	[HideInInspector] public Vector2 smoothMouse;
@@ -22,6 +23,7 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public HookState hookState;
 
 	private void Awake () {
+		Physics.gravity = -Vector3.up * 25f;
 		idleState = new IdleState (this);
 		walkState = new WalkState (this);
 		hookState = new HookState (this);

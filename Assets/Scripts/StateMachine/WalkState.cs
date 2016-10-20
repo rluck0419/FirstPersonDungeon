@@ -12,6 +12,7 @@ public class WalkState : IPlayerState {
 
 	public void UpdateState () {
 		Look ();
+		Jump ();
 		Move ();
 	}
 
@@ -65,6 +66,12 @@ public class WalkState : IPlayerState {
 		player.mainCamera.transform.localRotation = yRotation;
 
 		player.mainCamera.transform.localRotation *= targetOrientation;
+	}
+
+	private void Jump () {
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			player.rigidbody.velocity = Vector3.up * 10;
+		}
 	}
 
 	private void Move () {

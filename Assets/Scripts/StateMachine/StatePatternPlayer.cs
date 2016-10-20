@@ -19,10 +19,12 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public IPlayerState currentState;
 	[HideInInspector] public IdleState idleState;
 	[HideInInspector] public WalkState walkState;
+	[HideInInspector] public HookState hookState;
 
 	private void Awake () {
 		idleState = new IdleState (this);
 		walkState = new WalkState (this);
+		hookState = new HookState (this);
 	}
 
 	void Start () {

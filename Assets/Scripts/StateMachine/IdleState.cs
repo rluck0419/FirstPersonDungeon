@@ -22,6 +22,11 @@ public class IdleState : IPlayerState {
 		player.currentState = player.walkState;
 	}
 
+	public void ToHookState () {
+		Debug.Log ("player is now in hook state");
+		player.currentState = player.hookState;
+	}
+
 	private void Look () {
 		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0)
 			ToWalkState ();

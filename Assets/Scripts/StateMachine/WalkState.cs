@@ -24,6 +24,11 @@ public class WalkState : IPlayerState {
 		Debug.Log ("Whoops... You can't go from one state to the same state (walk)");
 	}
 
+	public void ToHookState () {
+		Debug.Log ("player is now in hook state");
+		player.currentState = player.hookState;
+	}
+
 	private void Look () {
 		if (Input.GetAxis ("Horizontal") == 0 && Input.GetAxis ("Vertical") == 0)
 			ToIdleState ();

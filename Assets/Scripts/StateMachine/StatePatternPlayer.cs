@@ -5,7 +5,12 @@ public class StatePatternPlayer : MonoBehaviour {
 
 	public GameObject mainCamera;
 
-	public float moveSpeed = 2.0f;
+	public float moveSpeed = 8.0f;
+	public float gravity = 10.0f;
+	public float maxVelocityChange = 10.0f;
+	public bool canJump = true;
+	public float jumpHeight = 3.0f;
+	[HideInInspector] public bool grounded = false;
 
 	public Vector2 clampInDegrees = new Vector2(360, 180);
 	public Vector2 sensitivity = new Vector2(2, 2);
@@ -23,7 +28,8 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public HookState hookState;
 
 	private void Awake () {
-		Physics.gravity = -Vector3.up * 25f;
+		rigidbody.freezeRotation = true;
+		rigidbody.useGravity = false;
 		idleState = new IdleState (this);
 		walkState = new WalkState (this);
 		hookState = new HookState (this);
@@ -36,5 +42,9 @@ public class StatePatternPlayer : MonoBehaviour {
 
 	void Update () {
 		currentState.UpdateState ();
+	}
+
+	void OnCollisionStay () {
+		grounded = true;
 	}
 }

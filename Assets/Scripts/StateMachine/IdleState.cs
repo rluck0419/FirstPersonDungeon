@@ -29,7 +29,7 @@ public class IdleState : IPlayerState {
 	}
 
 	private void Look () {
-		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0)
+		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || player.rigidbody.velocity != Vector3.zero)
 			ToWalkState ();
 		
 		// Allow the script to clamp based on a desired target value.
@@ -67,8 +67,9 @@ public class IdleState : IPlayerState {
 	}
 
 	private void Jump () {
-		if (Input.GetKeyDown (KeyCode.Space)) {
+		if (player.grounded && Input.GetKeyDown (KeyCode.Space)) {
 			player.rigidbody.velocity = Vector3.up * 10f;
+			player.grounded = false;
 		}
 	}
 }

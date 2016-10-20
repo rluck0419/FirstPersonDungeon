@@ -31,7 +31,7 @@ public class WalkState : IPlayerState {
 	}
 
 	private void Look () {
-		if (Input.GetAxis ("Horizontal") == 0 && Input.GetAxis ("Vertical") == 0)
+		if (player.rigidbody.velocity == Vector3.zero)
 			ToIdleState ();
 		
 		// Allow the script to clamp based on a desired target value.
@@ -75,13 +75,35 @@ public class WalkState : IPlayerState {
 	}
 
 	private void Move () {
-		if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
-			player.moveSpeed = 4;
-		} else {
-			player.moveSpeed = 2;
+		if (player.grounded) {
+			// Calculate how fast we should be moving
+			Vector3 targetVelocity = new Vector3(Input.GetAxis("Vertical"), 0, -Input.GetAxis("Horizontal"));
+			targetVelocity = player.transform.TransformDirection(targetVelocity);
+			targetVelocity *= player.moveSpeed;
+
+			// Apply a force that attempts to reach our target velocity
+			Vector3 velocity = player.rigidbody.velocity;
+			Vector3 velocityChange = (targetVelocity - velocity);
+			velocityChange.x = Mathf.Clamp(velocityChange.x, -player.maxVelocityChange, player.maxVelocityChange);
+			velocityChange.z = Mathf.Clamp(velocityChange.z, -player.maxVelocityChange, player.maxVelocityChange);
+			velocityChange.y = 0;
+			player.rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+
+			// Jump
+			if (player.canJump && Input.GetButton("Jump")) {
+				player.rigidbody.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+			}
 		}
 
-		player.transform.position += player.transform.right * Input.GetAxis ("Vertical") * (player.moveSpeed / 10);
-		player.transform.position -= player.transform.forward * Input.GetAxis ("Horizontal") * (player.moveSpeed / 10);
+		// We apply gravity manually for more tuning control
+		player.rigidbody.AddForce(new Vector3 (0, -player.gravity * player.rigidbody.mass, 0));
+
+		player.grounded = false;
+	}
+
+	float CalculateJumpVerticalSpeed () {
+		// From the jump height and gravity we deduce the upwards speed 
+		// for the character to reach at the apex.
+		return Mathf.Sqrt(2 * player.jumpHeight * player.gravity);
 	}
 }

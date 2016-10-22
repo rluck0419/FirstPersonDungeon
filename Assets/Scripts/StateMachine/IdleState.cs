@@ -66,10 +66,19 @@ public class IdleState : IPlayerState {
 		player.mainCamera.transform.localRotation *= targetOrientation;
 	}
 
+	bool Grounded () {
+		return Physics.Raycast(player.transform.position, -Vector3.up, player.distToGround + 0.5f);
+	}
+
+	float CalculateJumpVerticalSpeed () {
+		// From the jump height and gravity we deduce the upwards speed 
+		// for the character to reach at the apex.
+		return Mathf.Sqrt(2 * player.jumpHeight * player.gravity);
+	}
+
 	private void Jump () {
-		if (player.grounded && Input.GetKeyDown (KeyCode.Space)) {
-			player.rigidbody.velocity = Vector3.up * 10f;
-			player.grounded = false;
+		if (Grounded() && Input.GetKeyDown (KeyCode.Space)) {
+			player.rigidbody.velocity = new Vector3(player.rigidbody.velocity.x, CalculateJumpVerticalSpeed(), player.rigidbody.velocity.z);
 		}
 	}
 }

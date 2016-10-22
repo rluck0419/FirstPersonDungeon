@@ -12,7 +12,6 @@ public class WalkState : IPlayerState {
 
 	public void UpdateState () {
 		Look ();
-		Jump ();
 		Move ();
 	}
 
@@ -68,37 +67,39 @@ public class WalkState : IPlayerState {
 		player.mainCamera.transform.localRotation *= targetOrientation;
 	}
 
-	private void Jump () {
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			player.rigidbody.velocity = Vector3.up * 10;
-		}
-	}
-
 	private void Move () {
-		if (player.grounded) {
+		RaycastHit hit;
+		if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround + 1f)) {
+			Vector3 normal = hit.normal;
+			Debug.Log (normal);
+
 			// Calculate how fast we should be moving
-			Vector3 targetVelocity = new Vector3(Input.GetAxis("Vertical"), 0, -Input.GetAxis("Horizontal"));
-			targetVelocity = player.transform.TransformDirection(targetVelocity);
-			targetVelocity *= player.moveSpeed;
-
-			// Apply a force that attempts to reach our target velocity
 			Vector3 velocity = player.rigidbody.velocity;
-			Vector3 velocityChange = (targetVelocity - velocity);
-			velocityChange.x = Mathf.Clamp(velocityChange.x, -player.maxVelocityChange, player.maxVelocityChange);
-			velocityChange.z = Mathf.Clamp(velocityChange.z, -player.maxVelocityChange, player.maxVelocityChange);
-			velocityChange.y = 0;
-			player.rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+			Vector3 targetVelocity = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
+			if (targetVelocity != Vector3.zero) {
+				targetVelocity = player.transform.TransformDirection (targetVelocity);
+				targetVelocity *= player.moveSpeed;
 
-			// Jump
-			if (player.canJump && Input.GetButton("Jump")) {
-				player.rigidbody.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+				// Apply a force that attempts to reach our target velocity
+				Vector3 velocityChange = (targetVelocity - velocity);
+				velocityChange.x = Mathf.Clamp (velocityChange.x, -player.maxVelocityChange, player.maxVelocityChange);
+				velocityChange.z = Mathf.Clamp (velocityChange.z, -player.maxVelocityChange, player.maxVelocityChange);
+				velocityChange.y = 0;
+				velocityChange = Quaternion.Euler (normal) * velocityChange;
+				player.rigidbody.AddForce (velocityChange, ForceMode.VelocityChange);
+			}
+
+			if (player.canJump && Input.GetButton ("Jump")) {
+				player.rigidbody.velocity = new Vector3 (velocity.x, CalculateJumpVerticalSpeed (), velocity.z);
 			}
 		}
 
 		// We apply gravity manually for more tuning control
 		player.rigidbody.AddForce(new Vector3 (0, -player.gravity * player.rigidbody.mass, 0));
+	}
 
-		player.grounded = false;
+	bool Grounded () {
+		return Physics.Raycast(player.transform.position, -Vector3.up, player.distToGround + 0.1f);
 	}
 
 	float CalculateJumpVerticalSpeed () {

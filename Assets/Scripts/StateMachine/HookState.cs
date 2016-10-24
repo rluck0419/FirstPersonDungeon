@@ -26,4 +26,15 @@ public class HookState : IPlayerState {
 	public void ToHookState () {
 		Debug.Log ("Whoops... You can't go from one state to the same state (hook)");
 	}
+
+	public void ToSneakState () {
+		Debug.Log ("player is now in sneak state");
+		player.currentState = player.sneakState;
+	}
+
+	public void ToBounceState () {
+		Debug.Log ("player is now in bounce state");
+		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
+		player.currentState = player.bounceState;
+	}
 }

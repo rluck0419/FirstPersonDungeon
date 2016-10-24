@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WalkState : IPlayerState {
+public class SneakState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
 	public Quaternion xRotation;
 
-	public WalkState (StatePatternPlayer statePatternPlayer) {
+	public SneakState (StatePatternPlayer statePatternPlayer) {
 		player = statePatternPlayer;
 	}
 
@@ -22,7 +22,10 @@ public class WalkState : IPlayerState {
 	}
 
 	public void ToWalkState () {
-		Debug.Log ("Whoops... You can't go from one state to the same state (walk)");
+		player.transform.localScale += player.crouch;
+		player.transform.position += player.crouch;
+		Debug.Log ("player is now in walk state");
+		player.currentState = player.walkState;
 	}
 
 	public void ToHookState () {
@@ -31,10 +34,7 @@ public class WalkState : IPlayerState {
 	}
 
 	public void ToSneakState () {
-		player.transform.localScale -= player.crouch;
-		player.transform.position -= player.crouch;
-		Debug.Log ("player is now in sneak state");
-		player.currentState = player.sneakState;
+		Debug.Log ("Whoops... You can't go from one state to the same state (sneak)");
 	}
 
 	public void ToBounceState () {
@@ -44,12 +44,10 @@ public class WalkState : IPlayerState {
 	}
 
 	private void Transition () {
-		if (Input.GetKeyDown (KeyCode.C))
-			ToSneakState ();
+		if (Input.GetKeyDown (KeyCode.C) || Input.GetKeyDown (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift))
+			ToWalkState ();
 		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
 			ToBounceState ();
-		if (player.rigidbody.velocity == Vector3.zero)
-			ToIdleState ();
 	}
 
 	private void Look () {
@@ -88,52 +86,39 @@ public class WalkState : IPlayerState {
 	}
 
 	private void Move () {
-		Vector3 velocity = player.rigidbody.velocity;
-
 		RaycastHit hit;
 		if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround + 2f)) {
+			// Calculate how fast we should be moving
+			Vector3 velocity = player.rigidbody.velocity;
+			Vector3 targetVelocity = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
+			targetVelocity.Normalize ();
+			if (targetVelocity != Vector3.zero) {
+				targetVelocity = player.transform.TransformDirection (targetVelocity);
+
+				player.moveSpeed = 4f;
+
+				targetVelocity *= player.moveSpeed;
+
+
+				// Apply a force that attempts to reach our target velocity
+				Vector3 velocityChange = (targetVelocity - velocity);
+				velocityChange.x = Mathf.Clamp (velocityChange.x, -player.maxVelocityChange, player.maxVelocityChange);
+				velocityChange.z = Mathf.Clamp (velocityChange.z, -player.maxVelocityChange, player.maxVelocityChange);
+				velocityChange.y = 0;
+				velocityChange = Quaternion.Euler (hit.normal) * velocityChange;
+				player.rigidbody.AddForce (velocityChange, ForceMode.VelocityChange);
+			}
+
+
+			if (hit.normal != Vector3.up) {
+				player.maxVelocityChange = 1f;
+			} else {
+				player.maxVelocityChange = 0.5f;
+			}
+
 			if (player.canJump && Input.GetButton ("Jump")) {
 				player.rigidbody.velocity = new Vector3 (velocity.x, CalculateJumpVerticalSpeed (), velocity.z);
 			}
-		}
-
-		Vector3 targetVelocity = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
-
-		targetVelocity.Normalize ();
-		if (targetVelocity != Vector3.zero) {
-			player.GetComponent<CapsuleCollider> ().material.dynamicFriction = 0.5f;
-			targetVelocity = player.transform.TransformDirection (targetVelocity);
-
-			if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
-				player.moveSpeed = 14f;
-			else
-				player.moveSpeed = 7f;
-
-			targetVelocity *= player.moveSpeed;
-
-
-			// Apply a force that attempts to reach our target velocity
-			Vector3 velocityChange = (targetVelocity - velocity);
-			velocityChange.x = Mathf.Clamp (velocityChange.x, -player.maxVelocityChange, player.maxVelocityChange);
-			velocityChange.z = Mathf.Clamp (velocityChange.z, -player.maxVelocityChange, player.maxVelocityChange);
-			velocityChange.y = 0;
-
-			// move "forward" across object - parallel to face of obstacle based on angle
-			RaycastHit obstacle;
-			if (Physics.Raycast (player.transform.position, velocityChange, out obstacle, 1.25f))
-				velocityChange = velocityChange - obstacle.normal * Vector3.Dot (velocityChange, obstacle.normal);
-
-			velocityChange = Quaternion.Euler (hit.normal) * velocityChange;
-
-			player.rigidbody.AddForce (velocityChange, ForceMode.VelocityChange);
-		} else {
-			player.GetComponent<CapsuleCollider> ().material.dynamicFriction = 1f;
-		}
-
-		if (hit.normal != Vector3.up) {
-			player.maxVelocityChange = 1f;
-		} else {
-			player.maxVelocityChange = 0.5f;
 		}
 
 		// We apply gravity manually for more tuning control

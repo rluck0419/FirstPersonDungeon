@@ -10,6 +10,7 @@ public class IdleState : IPlayerState {
 	}
 
 	public void UpdateState () {
+		Transition ();
 		Look ();
 		Jump ();
 	}
@@ -28,10 +29,29 @@ public class IdleState : IPlayerState {
 		player.currentState = player.hookState;
 	}
 
-	private void Look () {
+	public void ToSneakState () {
+		player.transform.localScale -= player.crouch;
+		player.transform.position -= player.crouch;
+		Debug.Log ("player is now in sneak state");
+		player.currentState = player.sneakState;
+	}
+
+	public void ToBounceState () {
+		Debug.Log ("player is now in bounce state");
+		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
+		player.currentState = player.bounceState;
+	}
+
+	private void Transition () {
+		if (Input.GetKeyDown (KeyCode.C))
+			ToSneakState ();
+		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
+			ToBounceState ();
 		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || player.rigidbody.velocity != Vector3.zero)
 			ToWalkState ();
-		
+	}
+
+	private void Look () {		
 		// Allow the script to clamp based on a desired target value.
 		var targetOrientation = Quaternion.Euler(player.targetDirection);
 

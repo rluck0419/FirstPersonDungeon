@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WalkState : IPlayerState {
+public class BounceState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
 	public Quaternion xRotation;
 
-	public WalkState (StatePatternPlayer statePatternPlayer) {
+	public BounceState (StatePatternPlayer statePatternPlayer) {
 		player = statePatternPlayer;
 	}
 
@@ -22,7 +22,9 @@ public class WalkState : IPlayerState {
 	}
 
 	public void ToWalkState () {
-		Debug.Log ("Whoops... You can't go from one state to the same state (walk)");
+		player.GetComponent<CapsuleCollider> ().material.bounciness = 0f;
+		Debug.Log ("player is now in walk state");
+		player.currentState = player.walkState;
 	}
 
 	public void ToHookState () {
@@ -31,25 +33,17 @@ public class WalkState : IPlayerState {
 	}
 
 	public void ToSneakState () {
-		player.transform.localScale -= player.crouch;
-		player.transform.position -= player.crouch;
 		Debug.Log ("player is now in sneak state");
 		player.currentState = player.sneakState;
 	}
 
 	public void ToBounceState () {
-		Debug.Log ("player is now in bounce state");
-		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
-		player.currentState = player.bounceState;
+		Debug.Log ("Whoops... You can't go from one state to the same state (bounce)");
 	}
 
 	private void Transition () {
-		if (Input.GetKeyDown (KeyCode.C))
-			ToSneakState ();
 		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
-			ToBounceState ();
-		if (player.rigidbody.velocity == Vector3.zero)
-			ToIdleState ();
+			ToWalkState ();
 	}
 
 	private void Look () {

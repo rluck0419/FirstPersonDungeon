@@ -11,9 +11,9 @@ public class WalkState : IPlayerState {
 	}
 
 	public void UpdateState () {
-		Transition ();
 		Look ();
 		Move ();
+		Transition ();
 	}
 
 	public void ToIdleState () {
@@ -30,22 +30,14 @@ public class WalkState : IPlayerState {
 		player.currentState = player.hookState;
 	}
 
-	public void ToSneakState () {
-		player.transform.localScale -= player.crouch;
-		player.transform.position -= player.crouch;
-		Debug.Log ("player is now in sneak state");
-		player.currentState = player.sneakState;
-	}
-
 	public void ToBounceState () {
 		Debug.Log ("player is now in bounce state");
+		player.collided = false;
 		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
 		player.currentState = player.bounceState;
 	}
 
 	private void Transition () {
-		if (Input.GetKeyDown (KeyCode.C))
-			ToSneakState ();
 		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
 			ToBounceState ();
 		if (player.rigidbody.velocity == Vector3.zero)
@@ -92,6 +84,11 @@ public class WalkState : IPlayerState {
 
 		RaycastHit hit;
 		if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround + 2f)) {
+			if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
+				player.moveSpeed = 14f;
+			else
+				player.moveSpeed = 7f;
+			
 			if (player.canJump && Input.GetButton ("Jump")) {
 				player.rigidbody.velocity = new Vector3 (velocity.x, CalculateJumpVerticalSpeed (), velocity.z);
 			}
@@ -103,11 +100,6 @@ public class WalkState : IPlayerState {
 		if (targetVelocity != Vector3.zero) {
 			player.GetComponent<CapsuleCollider> ().material.dynamicFriction = 0.5f;
 			targetVelocity = player.transform.TransformDirection (targetVelocity);
-
-			if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
-				player.moveSpeed = 14f;
-			else
-				player.moveSpeed = 7f;
 
 			targetVelocity *= player.moveSpeed;
 

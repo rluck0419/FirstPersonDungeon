@@ -23,28 +23,20 @@ public class IdleState : IPlayerState {
 		Debug.Log ("player is now in walk state");
 		player.currentState = player.walkState;
 	}
+		
+	public void ToBounceState () {
+		Debug.Log ("player is now in bounce state");
+		player.collided = false;
+		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
+		player.currentState = player.bounceState;
+	}
 
 	public void ToHookState () {
 		Debug.Log ("player is now in hook state");
 		player.currentState = player.hookState;
 	}
 
-	public void ToSneakState () {
-		player.transform.localScale -= player.crouch;
-		player.transform.position -= player.crouch;
-		Debug.Log ("player is now in sneak state");
-		player.currentState = player.sneakState;
-	}
-
-	public void ToBounceState () {
-		Debug.Log ("player is now in bounce state");
-		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
-		player.currentState = player.bounceState;
-	}
-
 	private void Transition () {
-		if (Input.GetKeyDown (KeyCode.C))
-			ToSneakState ();
 		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
 			ToBounceState ();
 		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || player.rigidbody.velocity != Vector3.zero)

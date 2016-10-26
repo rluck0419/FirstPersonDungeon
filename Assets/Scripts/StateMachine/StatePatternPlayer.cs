@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class StatePatternPlayer : MonoBehaviour {
 
 	// player objects / components
 	public GameObject mainCamera;
+	public Text scoreText;
 	public Rigidbody rigidbody;
+	public bool collided = true;
 
 	// crouch amount
 	[HideInInspector] public Vector3 crouch = new Vector3  (0, 0.75f, 0);
@@ -22,6 +26,9 @@ public class StatePatternPlayer : MonoBehaviour {
 	public bool canJump = true;
 	public float jumpHeight = 3.0f;
 
+	[HideInInspector] public List<Collider> collidedPlats;
+//	[HideInInspector] public float bounce = 0f;
+	[HideInInspector] public int score = 0;
 	[HideInInspector] public Vector2 targetDirection;
 	[HideInInspector] public Vector2 mouseAbsolute;
 	[HideInInspector] public Vector2 smoothMouse;
@@ -33,18 +40,17 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public IPlayerState currentState;
 	[HideInInspector] public IdleState idleState;
 	[HideInInspector] public WalkState walkState;
-	[HideInInspector] public HookState hookState;
-	[HideInInspector] public SneakState sneakState;
 	[HideInInspector] public BounceState bounceState;
+	[HideInInspector] public HookState hookState;
 
 	private void Awake () {
 		rigidbody.freezeRotation = true;
 		rigidbody.useGravity = false;
+		score = mainCamera.GetComponent<Gui> ().score_count;
 		idleState = new IdleState (this);
 		walkState = new WalkState (this);
-		hookState = new HookState (this);
-		sneakState = new SneakState (this);
 		bounceState = new BounceState (this);
+		hookState = new HookState (this);
 		distToGround = GetComponent<Collider> ().bounds.extents.y;
 	}
 
@@ -55,5 +61,21 @@ public class StatePatternPlayer : MonoBehaviour {
 
 	void Update () {
 		currentState.UpdateState ();
+	}
+
+	void OnCollisionEnter (Collision collision) {
+		if (currentState == bounceState) {
+			foreach (ContactPoint contact in collision.contacts) {
+				if (contact.normal == Vector3.up) {
+					collided = true;
+					if (!collidedPlats.Contains (contact.otherCollider)) {
+						collidedPlats.Add (contact.otherCollider);
+						score += 1;
+						scoreText.text = "Score: " + score + "00";
+						Debug.Log ("bounces: " + score + ". bounced on: " + contact.otherCollider.gameObject);
+					}
+				}
+			}
+		}
 	}
 }

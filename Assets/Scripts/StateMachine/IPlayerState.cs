@@ -9,9 +9,7 @@ public interface IPlayerState {
 
 	void ToWalkState ();
 
-	void ToHookState ();
-
-	void ToSneakState ();
-
 	void ToBounceState ();
+
+	void ToHookState ();
 }

@@ -38,19 +38,19 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public Vector3 moveDirection;
 
 	[HideInInspector] public IPlayerState currentState;
-	[HideInInspector] public IdleState idleState;
-	[HideInInspector] public WalkState walkState;
-	[HideInInspector] public BounceState bounceState;
-	[HideInInspector] public HookState hookState;
+	[HideInInspector] public PlayerIdleState idleState;
+	[HideInInspector] public PlayerWalkState walkState;
+	[HideInInspector] public PlayerBounceState bounceState;
+	[HideInInspector] public PlayerHookState hookState;
 
 	private void Awake () {
 		rigidbody.freezeRotation = true;
 		rigidbody.useGravity = false;
 		score = mainCamera.GetComponent<Gui> ().score_count;
-		idleState = new IdleState (this);
-		walkState = new WalkState (this);
-		bounceState = new BounceState (this);
-		hookState = new HookState (this);
+		idleState = new PlayerIdleState (this);
+		walkState = new PlayerWalkState (this);
+		bounceState = new PlayerBounceState (this);
+		hookState = new PlayerHookState (this);
 		distToGround = GetComponent<Collider> ().bounds.extents.y;
 	}
 

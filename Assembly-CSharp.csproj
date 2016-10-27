@@ -45,20 +45,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Finish.cs" />
-     <Compile Include="Assets\Scoring.cs" />
      <Compile Include="Assets\Scripts\Deathbox.cs" />
+     <Compile Include="Assets\Scripts\Finish.cs" />
      <Compile Include="Assets\Scripts\Gui.cs" />
      <Compile Include="Assets\Scripts\Latchable.cs" />
      <Compile Include="Assets\Scripts\Lock.cs" />
      <Compile Include="Assets\Scripts\Pickupable.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
-     <Compile Include="Assets\Scripts\StateMachine\BounceState.cs" />
-     <Compile Include="Assets\Scripts\StateMachine\HookState.cs" />
-     <Compile Include="Assets\Scripts\StateMachine\IPlayerState.cs" />
-     <Compile Include="Assets\Scripts\StateMachine\IdleState.cs" />
-     <Compile Include="Assets\Scripts\StateMachine\StatePatternPlayer.cs" />
-     <Compile Include="Assets\Scripts\StateMachine\WalkState.cs" />
+     <Compile Include="Assets\Scripts\Scoring.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Game\GamePauseState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Game\GamePlayState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Game\IGameState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Game\StatePatternGame.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Player\IPlayerState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Player\PlayerBounceState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Player\PlayerHookState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Player\PlayerIdleState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Player\PlayerWalkState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Player\StatePatternPlayer.cs" />
      <Compile Include="Assets\Scripts\Switch.cs" />
      <None Include="Assets\Gem\Shaders\Gem.shader" />
  <Reference Include="UnityEngine.UI">

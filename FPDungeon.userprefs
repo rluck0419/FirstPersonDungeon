@@ -1,18 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/StateMachine/StatePatternPlayer.cs">
-    <Files>
-      <File FileName="Assets/Scripts/StateMachine/StatePatternPlayer.cs" Line="77" Column="18" />
-      <File FileName="Assets/Scripts/StateMachine/BounceState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachine/IPlayerState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachine/WalkState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachine/HookState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachine/IdleState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Finish.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Gui.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scoring.cs" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

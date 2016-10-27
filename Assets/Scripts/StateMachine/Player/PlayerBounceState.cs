@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BounceState : IPlayerState {
+public class PlayerBounceState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
 	public Quaternion xRotation;
 
-	public BounceState (StatePatternPlayer statePatternPlayer) {
+	public PlayerBounceState (StatePatternPlayer statePatternPlayer) {
 		player = statePatternPlayer;
 	}
 
@@ -16,29 +16,29 @@ public class BounceState : IPlayerState {
 		Move ();
 	}
 
-	public void ToIdleState () {
+	public void ToPlayerIdleState () {
 		Debug.Log ("player is now in idle state");
 		player.currentState = player.idleState;
 	}
 
-	public void ToWalkState () {
+	public void ToPlayerWalkState () {
 		player.GetComponent<CapsuleCollider> ().material.bounciness = 0f;
 		Debug.Log ("player is now in walk state");
 		player.currentState = player.walkState;
 	}
 
-	public void ToBounceState () {
+	public void ToPlayerBounceState () {
 		Debug.Log ("Whoops... You can't go from one state to the same state (bounce)");
 	}
 
-	public void ToHookState () {
+	public void ToPlayerHookState () {
 		Debug.Log ("player is now in hook state");
 		player.currentState = player.hookState;
 	}
 
 	private void Transition () {
 		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand) || player.collided)
-			ToWalkState ();
+			ToPlayerWalkState ();
 	}
 
 	private void Look () {

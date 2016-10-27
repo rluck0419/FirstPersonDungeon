@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class IdleState : IPlayerState {
+public class PlayerIdleState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
 
-	public IdleState (StatePatternPlayer statePatternPlayer) {
+	public PlayerIdleState (StatePatternPlayer statePatternPlayer) {
 		player = statePatternPlayer;
 	}
 
@@ -15,32 +15,32 @@ public class IdleState : IPlayerState {
 		Jump ();
 	}
 
-	public void ToIdleState () {
+	public void ToPlayerIdleState () {
 		Debug.Log ("Whoops... You can't go from one state to the same state (idle)");
 	}
 
-	public void ToWalkState () {
+	public void ToPlayerWalkState () {
 		Debug.Log ("player is now in walk state");
 		player.currentState = player.walkState;
 	}
 		
-	public void ToBounceState () {
+	public void ToPlayerBounceState () {
 		Debug.Log ("player is now in bounce state");
 		player.collided = false;
 		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
 		player.currentState = player.bounceState;
 	}
 
-	public void ToHookState () {
+	public void ToPlayerHookState () {
 		Debug.Log ("player is now in hook state");
 		player.currentState = player.hookState;
 	}
 
 	private void Transition () {
 		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
-			ToBounceState ();
+			ToPlayerBounceState ();
 		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || player.rigidbody.velocity != Vector3.zero)
-			ToWalkState ();
+			ToPlayerWalkState ();
 	}
 
 	private void Look () {		

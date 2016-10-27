@@ -27,7 +27,7 @@ public class StatePatternPlayer : MonoBehaviour {
 	public float jumpHeight = 3.0f;
 
 	[HideInInspector] public List<Collider> collidedPlats;
-//	[HideInInspector] public float bounce = 0f;
+	[HideInInspector] public int bounces = 0;
 	[HideInInspector] public int score = 0;
 	[HideInInspector] public Vector2 targetDirection;
 	[HideInInspector] public Vector2 mouseAbsolute;
@@ -68,11 +68,17 @@ public class StatePatternPlayer : MonoBehaviour {
 			foreach (ContactPoint contact in collision.contacts) {
 				if (contact.normal == Vector3.up) {
 					collided = true;
+					bounces += 1;
 					if (!collidedPlats.Contains (contact.otherCollider)) {
 						collidedPlats.Add (contact.otherCollider);
-						score += 1;
-						scoreText.text = "Score: " + score + "00";
-						Debug.Log ("bounces: " + score + ". bounced on: " + contact.otherCollider.gameObject);
+						score += 100;
+						scoreText.text = "Score: " + score;
+						Debug.Log ("Total bounces: " + bounces + ". Unique surface bounces (score): " + (score / 100)  + ". Last bounced on: " + contact.otherCollider.gameObject);
+						if (score == 2300) {
+							Debug.Log ("You hit all the platforms!");
+							if (bounces == 23)
+								Debug.Log("You only bounced once on each platform! Holy cow!");
+						}
 					}
 				}
 			}

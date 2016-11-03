@@ -80,7 +80,7 @@ public class PlayerBounceState : IPlayerState {
 		Vector3 velocity = player.rigidbody.velocity;
 
 		RaycastHit hit;
-		if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround + 2f)) {
+		if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround + 0.5f)) {
 			if (player.canJump && Input.GetButton ("Jump")) {
 				player.rigidbody.velocity = new Vector3 (velocity.x, CalculateJumpVerticalSpeed (), velocity.z);
 			}

@@ -125,8 +125,9 @@ public class PlayerWalkState : IPlayerState {
 		} else {
 			Vector3 currentVelocity = player.rigidbody.velocity;
 			float yVelocity = currentVelocity.y;
-			if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround) && jumping == false)
-				yVelocity *= 0.2f;
+			if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround + 0.1f) && jumping == false)
+//				yVelocity *= 0.2f;
+				yVelocity = 0f;
 			player.rigidbody.velocity = new Vector3 (currentVelocity.x * 0.2f, yVelocity, currentVelocity.z * 0.2f);
 			player.GetComponent<CapsuleCollider> ().material.dynamicFriction = 1f;
 		}

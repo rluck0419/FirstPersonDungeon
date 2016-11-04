@@ -5,6 +5,7 @@ public class PlayerWalkState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
 	public Quaternion xRotation;
+	public bool jumping = false;
 
 	public PlayerWalkState (StatePatternPlayer statePatternPlayer) {
 		player = statePatternPlayer;
@@ -91,6 +92,9 @@ public class PlayerWalkState : IPlayerState {
 			
 			if (player.canJump && Input.GetButton ("Jump")) {
 				player.rigidbody.velocity = new Vector3 (velocity.x, CalculateJumpVerticalSpeed (), velocity.z);
+				jumping = true;
+			} else {
+				jumping = false;
 			}
 		}
 
@@ -119,6 +123,11 @@ public class PlayerWalkState : IPlayerState {
 
 			player.rigidbody.AddForce (velocityChange, ForceMode.VelocityChange);
 		} else {
+			Vector3 currentVelocity = player.rigidbody.velocity;
+			float yVelocity = currentVelocity.y;
+			if (Physics.Raycast (player.transform.position, -Vector3.up, out hit, player.distToGround) && jumping == false)
+				yVelocity *= 0.2f;
+			player.rigidbody.velocity = new Vector3 (currentVelocity.x * 0.2f, yVelocity, currentVelocity.z * 0.2f);
 			player.GetComponent<CapsuleCollider> ().material.dynamicFriction = 1f;
 		}
 

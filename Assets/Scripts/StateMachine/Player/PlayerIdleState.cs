@@ -4,6 +4,17 @@ using System.Collections;
 public class PlayerIdleState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
+	private Pickupable p;
+	private float pickupRadius = 2.0f;
+	private Rigidbody r;
+	private GameObject carriedObject;
+	private GameObject thrownObject;
+	private Collider[] hitColliders;
+	private float distance = 3.0f;
+	private float thrust = 1024.0f;
+	private float smooth = 7.0f;
+	private float rotation = 2.0f;
+	private bool carrying = false;
 
 	public PlayerIdleState (StatePatternPlayer statePatternPlayer) {
 		player = statePatternPlayer;
@@ -13,6 +24,13 @@ public class PlayerIdleState : IPlayerState {
 		Transition ();
 		Look ();
 		Jump ();
+		if (carrying) {
+			CheckThrow ();
+			CheckDrop ();
+			Carry (carriedObject);
+		} else {
+			Pickup ();
+		}
 	}
 
 	public void ToPlayerIdleState () {
@@ -93,4 +111,106 @@ public class PlayerIdleState : IPlayerState {
 			player.rigidbody.velocity = new Vector3(player.rigidbody.velocity.x, CalculateJumpVerticalSpeed(), player.rigidbody.velocity.z);
 		}
 	}
+
+	private void Pickup () {
+		int x = Screen.width / 2;
+		int y = Screen.height / 2;
+
+		Ray ray = player.mainCamera.GetComponent<Camera>().ScreenPointToRay(new Vector3(x,y));
+		RaycastHit hit;
+
+		// TK pickup
+		if (Input.GetMouseButtonDown(0)) {
+			if (Physics.Raycast(ray, out hit)) {
+				p = hit.collider.GetComponent<Pickupable>();
+//				l = hit.collider.GetComponent<Latchable> ();
+
+				if (p != null) {
+					carrying = true;
+					carriedObject = p.gameObject;
+					r = carriedObject.GetComponent<Rigidbody>();
+					r.useGravity = false;
+				}
+
+//				if (l != null) {
+//					hooked = true;
+//					gravity = 0f;
+//				}
+			}
+		}
+
+		// within-reach pickup
+		if (Input.GetKeyDown (KeyCode.E)) {
+			if (Physics.Raycast(ray, out hit)) {
+				p = hit.collider.GetComponent<Pickupable>();
+
+				if (p != null) {
+					hitColliders = Physics.OverlapSphere(player.mainCamera.transform.position, pickupRadius);
+					foreach (Collider i in hitColliders) {
+						if (i.gameObject == p.gameObject) {
+							carrying = true;
+							carriedObject = p.gameObject;
+							r = carriedObject.GetComponent<Rigidbody>();
+							r.useGravity = false;
+						}
+					}
+				}
+			}
+		}
+		if (Input.GetKeyDown (KeyCode.R)) {
+			if (Physics.Raycast (ray, out hit)) {
+				p = hit.collider.GetComponent<Pickupable> ();
+				if (p != null) {
+					p.gameObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * thrust);
+				}
+			}
+		}
+	}
+
+	private void Carry (GameObject o) {
+		if (carrying==true && carriedObject!=null) {
+			o.transform.position = Vector3.Lerp (
+				o.transform.position,
+				player.mainCamera.transform.position + (player.mainCamera.transform.forward * distance),
+				Time.deltaTime * smooth
+			);
+			o.transform.Rotate(Vector3.right * rotation);
+		}
+	}
+
+	// Check if item should be dropped
+	private void CheckDrop () {
+		if (carriedObject != null) {
+			if(Input.GetKeyDown (KeyCode.E)) {
+				DropObject();
+			}
+		}
+	}
+
+	// Drop carried object
+	private void DropObject () {
+		carrying = false;
+		carriedObject.GetComponent<Rigidbody>().useGravity = true;
+		carriedObject = null;
+	}
+
+	// check if item should be thrown
+	private void CheckThrow () {
+		if(carrying == true && Input.GetMouseButtonDown(0)) {
+			carriedObject.GetComponent<Rigidbody>().isKinematic = false;
+			ThrowObject();
+		}
+	}
+
+	// Throw carried object
+	private void ThrowObject () {
+		carrying = false;
+		thrownObject = carriedObject;
+		carriedObject = null;
+
+		thrownObject.GetComponent<Rigidbody>().useGravity = true;
+		thrownObject.GetComponent<Rigidbody>().AddForce(player.transform.forward * thrust);
+
+		thrownObject = null;
+	}	
 }

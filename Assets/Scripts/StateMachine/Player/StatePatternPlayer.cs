@@ -45,6 +45,8 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public GameObject thrownObject;
 	[HideInInspector] public Collider[] hitColliders;
 	[HideInInspector] public float distance = 3.0f;
+	[HideInInspector] public float thrust = 1024.0f;
+	[HideInInspector] public float smooth = 7.0f;
 
 
 	[HideInInspector] public IPlayerState currentState;

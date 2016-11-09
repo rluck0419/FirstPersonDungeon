@@ -4,9 +4,6 @@ using System.Collections;
 public class PlayerIdleState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
-	private float thrust = 1024.0f;
-	private float smooth = 7.0f;
-	private float rotation = 2.0f;
 	private bool carrying = false;
 
 	public PlayerIdleState (StatePatternPlayer statePatternPlayer) {
@@ -154,7 +151,7 @@ public class PlayerIdleState : IPlayerState {
 			if (Physics.Raycast (ray, out hit)) {
 				player.pickup = hit.collider.GetComponent<Pickupable> ();
 				if (player.pickup != null) {
-					player.pickup.gameObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * thrust);
+					player.pickup.gameObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * player.thrust);
 				}
 			}
 		}
@@ -165,7 +162,7 @@ public class PlayerIdleState : IPlayerState {
 			o.transform.position = Vector3.Lerp (
 				o.transform.position,
 				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance),
-				Time.deltaTime * smooth
+				Time.deltaTime * player.smooth
 			);
 			o.transform.Rotate(Vector3.right * rotation);
 		}
@@ -202,7 +199,7 @@ public class PlayerIdleState : IPlayerState {
 		player.carriedObject = null;
 
 		player.thrownObject.GetComponent<Rigidbody>().useGravity = true;
-		player.thrownObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.forward * thrust);
+		player.thrownObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.forward * player.thrust);
 
 		player.thrownObject = null;
 	}	

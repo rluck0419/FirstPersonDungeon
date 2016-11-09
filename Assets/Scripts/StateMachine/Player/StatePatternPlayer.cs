@@ -47,7 +47,8 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public float distance = 3.0f;
 	[HideInInspector] public float thrust = 1024.0f;
 	[HideInInspector] public float smooth = 7.0f;
-
+	[HideInInspector] public float rotation = 2.0f;
+	[HideInInspector] public bool carrying = false;
 
 	[HideInInspector] public IPlayerState currentState;
 	[HideInInspector] public PlayerIdleState idleState;

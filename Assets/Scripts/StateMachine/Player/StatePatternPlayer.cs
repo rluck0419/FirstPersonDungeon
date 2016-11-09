@@ -39,6 +39,12 @@ public class StatePatternPlayer : MonoBehaviour {
 
 	// carry & throw variables
 	[HideInInspector] public Pickupable pickup;
+	[HideInInspector] public float pickupRadius = 4.0f;
+	[HideInInspector] public Rigidbody pickupRigidbody;
+	[HideInInspector] public GameObject carriedObject;
+
+
+
 
 	[HideInInspector] public IPlayerState currentState;
 	[HideInInspector] public PlayerIdleState idleState;

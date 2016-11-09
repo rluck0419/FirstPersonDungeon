@@ -37,6 +37,9 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public float distToGround;
 	[HideInInspector] public Vector3 moveDirection;
 
+	// carry & throw variables
+	[HideInInspector] public Pickupable pickup;
+
 	[HideInInspector] public IPlayerState currentState;
 	[HideInInspector] public PlayerIdleState idleState;
 	[HideInInspector] public PlayerWalkState walkState;

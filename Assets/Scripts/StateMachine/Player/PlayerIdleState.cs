@@ -4,7 +4,6 @@ using System.Collections;
 public class PlayerIdleState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
-	private Pickupable p;
 	private float pickupRadius = 2.0f;
 	private Rigidbody r;
 	private GameObject carriedObject;
@@ -122,12 +121,12 @@ public class PlayerIdleState : IPlayerState {
 		// TK pickup
 		if (Input.GetMouseButtonDown(0)) {
 			if (Physics.Raycast(ray, out hit)) {
-				p = hit.collider.GetComponent<Pickupable>();
+				player.pickup = hit.collider.GetComponent<Pickupable>();
 //				l = hit.collider.GetComponent<Latchable> ();
 
-				if (p != null) {
+				if (player.pickup != null) {
 					carrying = true;
-					carriedObject = p.gameObject;
+					carriedObject = player.pickup.gameObject;
 					r = carriedObject.GetComponent<Rigidbody>();
 					r.useGravity = false;
 				}
@@ -142,14 +141,14 @@ public class PlayerIdleState : IPlayerState {
 		// within-reach pickup
 		if (Input.GetKeyDown (KeyCode.E)) {
 			if (Physics.Raycast(ray, out hit)) {
-				p = hit.collider.GetComponent<Pickupable>();
+				player.pickup = hit.collider.GetComponent<Pickupable>();
 
-				if (p != null) {
+				if (player.pickup != null) {
 					hitColliders = Physics.OverlapSphere(player.mainCamera.transform.position, pickupRadius);
 					foreach (Collider i in hitColliders) {
-						if (i.gameObject == p.gameObject) {
+						if (i.gameObject == player.pickup.gameObject) {
 							carrying = true;
-							carriedObject = p.gameObject;
+							carriedObject = player.pickup.gameObject;
 							r = carriedObject.GetComponent<Rigidbody>();
 							r.useGravity = false;
 						}
@@ -159,9 +158,9 @@ public class PlayerIdleState : IPlayerState {
 		}
 		if (Input.GetKeyDown (KeyCode.R)) {
 			if (Physics.Raycast (ray, out hit)) {
-				p = hit.collider.GetComponent<Pickupable> ();
-				if (p != null) {
-					p.gameObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * thrust);
+				player.pickup = hit.collider.GetComponent<Pickupable> ();
+				if (player.pickup != null) {
+					player.pickup.gameObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * thrust);
 				}
 			}
 		}
@@ -209,7 +208,7 @@ public class PlayerIdleState : IPlayerState {
 		carriedObject = null;
 
 		thrownObject.GetComponent<Rigidbody>().useGravity = true;
-		thrownObject.GetComponent<Rigidbody>().AddForce(player.transform.forward * thrust);
+		thrownObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.forward * thrust);
 
 		thrownObject = null;
 	}	

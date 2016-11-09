@@ -4,9 +4,6 @@ using System.Collections;
 public class PlayerIdleState : IPlayerState {
 
 	private readonly StatePatternPlayer player;
-	private GameObject thrownObject;
-	private Collider[] hitColliders;
-	private float distance = 3.0f;
 	private float thrust = 1024.0f;
 	private float smooth = 7.0f;
 	private float rotation = 2.0f;
@@ -141,8 +138,8 @@ public class PlayerIdleState : IPlayerState {
 				player.pickup = hit.collider.GetComponent<Pickupable>();
 
 				if (player.pickup != null) {
-					hitColliders = Physics.OverlapSphere(player.mainCamera.transform.position, player.pickupRadius);
-					foreach (Collider i in hitColliders) {
+					player.hitColliders = Physics.OverlapSphere(player.mainCamera.transform.position, player.pickupRadius);
+					foreach (Collider i in player.hitColliders) {
 						if (i.gameObject == player.pickup.gameObject) {
 							carrying = true;
 							player.carriedObject = player.pickup.gameObject;
@@ -167,7 +164,7 @@ public class PlayerIdleState : IPlayerState {
 		if (carrying==true && player.carriedObject!=null) {
 			o.transform.position = Vector3.Lerp (
 				o.transform.position,
-				player.mainCamera.transform.position + (player.mainCamera.transform.forward * distance),
+				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance),
 				Time.deltaTime * smooth
 			);
 			o.transform.Rotate(Vector3.right * rotation);
@@ -201,12 +198,12 @@ public class PlayerIdleState : IPlayerState {
 	// Throw carried object
 	private void ThrowObject () {
 		carrying = false;
-		thrownObject = player.carriedObject;
+		player.thrownObject = player.carriedObject;
 		player.carriedObject = null;
 
-		thrownObject.GetComponent<Rigidbody>().useGravity = true;
-		thrownObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.forward * thrust);
+		player.thrownObject.GetComponent<Rigidbody>().useGravity = true;
+		player.thrownObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.forward * thrust);
 
-		thrownObject = null;
+		player.thrownObject = null;
 	}	
 }

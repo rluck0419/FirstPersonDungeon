@@ -2,13 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/StateMachine/Player/PlayerIdleState.cs">
     <Files>
+      <File FileName="Assets/Scripts/StateMachine/Player/PlayerIdleState.cs" Line="17" Column="4" />
       <File FileName="Assets/Scripts/StateMachine/Player/IPlayerState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachine/Player/PlayerIdleState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachine/Player/PlayerWalkState.cs" Line="133" Column="4" />
+      <File FileName="Assets/Scripts/StateMachine/Player/PlayerWalkState.cs" Line="269" Column="3" />
       <File FileName="Assets/Scripts/StateMachine/Player/PlayerBounceState.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/StateMachine/Player/PlayerHookState.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/StateMachine/Player/StatePatternPlayer.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/PlayerController.cs" Line="252" Column="1" />
+      <File FileName="Assets/Scripts/StateMachine/Player/StatePatternPlayer.cs" Line="51" Column="49" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -135,6 +135,7 @@ public class PlayerIdleState : IPlayerState {
 						player.carrying = true;
 						player.carriedObject = player.pickup.gameObject;
 						player.pickupRigidbody = player.carriedObject.GetComponent<Rigidbody>();
+						player.pickupRigidbody.velocity = Vector3.zero;
 						player.pickupRigidbody.useGravity = false;
 					}
 				}
@@ -153,6 +154,7 @@ public class PlayerIdleState : IPlayerState {
 				player.carrying = true;
 				player.carriedObject = player.pickup.gameObject;
 				player.pickupRigidbody = player.carriedObject.GetComponent<Rigidbody>();
+				player.pickupRigidbody.velocity = Vector3.zero;
 				player.pickupRigidbody.useGravity = false;
 			}
 
@@ -178,7 +180,7 @@ public class PlayerIdleState : IPlayerState {
 		if (player.carrying==true && player.carriedObject!=null) {
 			o.transform.position = Vector3.Lerp (
 				o.transform.position,
-				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance),
+				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance * 1.5f),
 				Time.deltaTime * player.smooth
 			);
 			o.transform.Rotate(Vector3.right * player.rotation);

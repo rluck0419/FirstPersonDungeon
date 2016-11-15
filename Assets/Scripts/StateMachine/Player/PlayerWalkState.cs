@@ -234,10 +234,9 @@ public class PlayerWalkState : IPlayerState {
 		if (player.carrying==true && player.carriedObject!=null) {
 			o.transform.position = Vector3.Lerp (
 				o.transform.position,
-				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance * 1.5f),
+				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance * 2f),
 				Time.deltaTime * player.smooth
 			);
-			o.transform.Rotate(Vector3.right * player.rotation);
 		}
 	}
 

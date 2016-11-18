@@ -14,6 +14,13 @@ public class PlayerBounceState : IPlayerState {
 		Transition ();
 		Look ();
 		Move ();
+		if (player.carrying) {
+			CheckThrow ();
+			CheckDrop ();
+			Carry (player.carriedObject);
+		} else {
+			CheckInteraction ();
+		}
 	}
 
 	public void ToPlayerIdleState () {
@@ -135,5 +142,129 @@ public class PlayerBounceState : IPlayerState {
 		// From the jump height and gravity we deduce the upwards speed 
 		// for the character to reach at the apex.
 		return Mathf.Sqrt(2 * player.jumpHeight * player.gravity);
+	}
+
+	private void CheckInteraction () {
+		int x = Screen.width / 2;
+		int y = Screen.height / 2;
+
+		Ray ray = player.mainCamera.GetComponent<Camera>().ScreenPointToRay(new Vector3(x,y));
+
+		// within-reach pickup
+		if (Input.GetKeyDown (KeyCode.E)) {
+			Pickup (ray);
+		}
+
+		// TK pickup
+		if (Input.GetMouseButtonDown(0)) {
+			Pull (ray);
+		}
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			Push (ray);
+		}
+	}
+
+	private void Pickup (Ray ray) {
+		RaycastHit hit;
+
+		if (Physics.Raycast(ray, out hit)) {
+			player.pickup = hit.collider.GetComponent<Pickupable>();
+
+			if (player.pickup != null) {
+				player.hitColliders = Physics.OverlapSphere(player.mainCamera.transform.position, player.pickupRadius);
+				foreach (Collider i in player.hitColliders) {
+					if (i.gameObject == player.pickup.gameObject) {
+						player.carrying = true;
+						player.carriedObject = player.pickup.gameObject;
+						player.pickupRigidbody = player.carriedObject.GetComponent<Rigidbody>();
+						player.pickupRigidbody.velocity = Vector3.zero;
+						player.pickupRigidbody.useGravity = false;
+					}
+				}
+			}
+		}
+	}
+
+	private void Pull (Ray ray) {
+		RaycastHit hit;
+
+		if (Physics.Raycast(ray, out hit)) {
+			player.pickup = hit.collider.GetComponent<Pickupable>();
+			//				l = hit.collider.GetComponent<Latchable> ();
+
+			if (player.pickup != null) {
+				player.carrying = true;
+				player.carriedObject = player.pickup.gameObject;
+				player.pickupRigidbody = player.carriedObject.GetComponent<Rigidbody>();
+				player.pickupRigidbody.velocity = Vector3.zero;
+				player.pickupRigidbody.useGravity = false;
+			}
+
+			//				if (l != null) {
+			//					hooked = true;
+			//					gravity = 0f;
+			//				}
+		}
+	}
+
+	private void Push (Ray ray) {
+		RaycastHit hit;
+
+		if (Physics.Raycast (ray, out hit)) {
+			player.pickup = hit.collider.GetComponent<Pickupable> ();
+			if (player.pickup != null) {
+				player.pickup.gameObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * player.thrust);
+			}
+		}
+	}
+
+	private void Carry (GameObject o) {
+		if (player.carrying==true && player.carriedObject!=null) {
+			o.transform.position = Vector3.Lerp (
+				o.transform.position,
+				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance * 2f),
+				Time.deltaTime * player.smooth
+			);
+		}
+	}
+
+	// Check if item should be dropped
+	private void CheckDrop () {
+		if (player.carriedObject != null) {
+			if(Input.GetKeyDown (KeyCode.E)) {
+				DropObject();
+			}
+		}
+	}
+
+	// Drop carried object
+	private void DropObject () {
+		player.carrying = false;
+		player.pickupRigidbody = player.carriedObject.GetComponent<Rigidbody> ();
+		player.pickupRigidbody.velocity = Vector3.zero;
+		player.pickupRigidbody.useGravity = true;
+		player.carriedObject = null;
+	}
+
+	// check if item should be thrown
+	private void CheckThrow () {
+		if(player.carrying == true && Input.GetMouseButtonDown(0)) {
+			player.carriedObject.GetComponent<Rigidbody> ().isKinematic = false;
+			ThrowObject();
+		}
+	}
+
+	// Throw carried object
+	private void ThrowObject () {
+		player.carrying = false;
+		player.thrownObject = player.carriedObject;
+		player.carriedObject = null;
+
+		player.thrownObject.GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		player.thrownObject.GetComponent<Rigidbody> ().useGravity = true;
+		player.thrownObject.GetComponent<Rigidbody> ().AddForce(player.mainCamera.transform.forward * player.thrust);
+
+		player.thrownObject = null;
 	}
 }

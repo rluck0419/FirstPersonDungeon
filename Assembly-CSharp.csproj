@@ -65,6 +65,7 @@
      <Compile Include="Assets\Scripts\StateMachine\Player\StatePatternPlayer.cs" />
      <Compile Include="Assets\Scripts\Switch.cs" />
      <Compile Include="Assets\Scripts\menu\LoadOnClick.cs" />
+     <Compile Include="Assets\Scripts\rotateWorld.cs" />
      <None Include="Assets\Gem\Shaders\Gem.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

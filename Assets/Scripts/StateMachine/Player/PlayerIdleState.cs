@@ -198,7 +198,9 @@ public class PlayerIdleState : IPlayerState {
 	// Drop carried object
 	private void DropObject () {
 		player.carrying = false;
-		player.carriedObject.GetComponent<Rigidbody>().useGravity = true;
+		player.pickupRigidbody = player.carriedObject.GetComponent<Rigidbody> ();
+		player.pickupRigidbody.velocity = Vector3.zero;
+		player.pickupRigidbody.useGravity = true;
 		player.carriedObject = null;
 	}
 
@@ -216,8 +218,9 @@ public class PlayerIdleState : IPlayerState {
 		player.thrownObject = player.carriedObject;
 		player.carriedObject = null;
 
-		player.thrownObject.GetComponent<Rigidbody>().useGravity = true;
-		player.thrownObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.forward * player.thrust);
+		player.thrownObject.GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		player.thrownObject.GetComponent<Rigidbody> ().useGravity = true;
+		player.thrownObject.GetComponent<Rigidbody> ().AddForce(player.mainCamera.transform.forward * player.thrust);
 
 		player.thrownObject = null;
 	}	

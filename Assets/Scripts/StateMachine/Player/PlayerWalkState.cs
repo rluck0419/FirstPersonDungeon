@@ -12,9 +12,9 @@ public class PlayerWalkState : IPlayerState {
 	}
 
 	public void UpdateState () {
+		Transition ();
 		Look ();
 		Move ();
-		Transition ();
 		if (player.carrying) {
 			CheckThrow ();
 			CheckDrop ();
@@ -252,14 +252,16 @@ public class PlayerWalkState : IPlayerState {
 	// Drop carried object
 	private void DropObject () {
 		player.carrying = false;
-		player.carriedObject.GetComponent<Rigidbody>().useGravity = true;
+		player.pickupRigidbody = player.carriedObject.GetComponent<Rigidbody> ();
+		player.pickupRigidbody.velocity = Vector3.zero;
+		player.pickupRigidbody.useGravity = true;
 		player.carriedObject = null;
 	}
 
 	// check if item should be thrown
 	private void CheckThrow () {
 		if(player.carrying == true && Input.GetMouseButtonDown(0)) {
-			player.carriedObject.GetComponent<Rigidbody>().isKinematic = false;
+			player.carriedObject.GetComponent<Rigidbody> ().isKinematic = false;
 			ThrowObject();
 		}
 	}
@@ -270,8 +272,9 @@ public class PlayerWalkState : IPlayerState {
 		player.thrownObject = player.carriedObject;
 		player.carriedObject = null;
 
-		player.thrownObject.GetComponent<Rigidbody>().useGravity = true;
-		player.thrownObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.forward * player.thrust);
+		player.thrownObject.GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		player.thrownObject.GetComponent<Rigidbody> ().useGravity = true;
+		player.thrownObject.GetComponent<Rigidbody> ().AddForce(player.mainCamera.transform.forward * player.thrust);
 
 		player.thrownObject = null;
 	}

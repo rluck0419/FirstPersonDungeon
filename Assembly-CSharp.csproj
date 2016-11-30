@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\StateMachine\Player\PlayerBounceState.cs" />
      <Compile Include="Assets\Scripts\StateMachine\Player\PlayerHookState.cs" />
      <Compile Include="Assets\Scripts\StateMachine\Player\PlayerIdleState.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Player\PlayerSneakState.cs" />
      <Compile Include="Assets\Scripts\StateMachine\Player\PlayerWalkState.cs" />
      <Compile Include="Assets\Scripts\StateMachine\Player\StatePatternPlayer.cs" />
      <Compile Include="Assets\Scripts\Switch.cs" />

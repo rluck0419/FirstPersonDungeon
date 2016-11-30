@@ -33,4 +33,10 @@ public class PlayerHookState : IPlayerState {
 	public void ToPlayerHookState () {
 		Debug.Log ("Whoops... You can't go from one state to the same state (hook)");
 	}
+
+	public void ToPlayerSneakState () {
+		Debug.Log ("player is now in walk state");
+		player.transform.localScale -= (Vector3.up * 0.5f);
+		player.currentState = player.sneakState;
+	}
 }

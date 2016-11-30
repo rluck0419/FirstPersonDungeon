@@ -43,9 +43,17 @@ public class PlayerIdleState : IPlayerState {
 		player.currentState = player.hookState;
 	}
 
+	public void ToPlayerSneakState () {
+		Debug.Log ("player is now in sneak state");
+		player.transform.localScale -= (Vector3.up * 0.5f);
+		player.currentState = player.sneakState;
+	}
+
 	private void Transition () {
-		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
-			ToPlayerBounceState ();
+//		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
+//			ToPlayerBounceState ();
+		if (Input.GetKeyDown (KeyCode.C))
+			ToPlayerSneakState ();
 		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || player.rigidbody.velocity != Vector3.zero)
 			ToPlayerWalkState ();
 	}

@@ -12,4 +12,6 @@ public interface IPlayerState {
 	void ToPlayerBounceState ();
 
 	void ToPlayerHookState ();
+
+	void ToPlayerSneakState ();
 }

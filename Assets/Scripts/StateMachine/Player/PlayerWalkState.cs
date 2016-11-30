@@ -45,9 +45,17 @@ public class PlayerWalkState : IPlayerState {
 		player.currentState = player.bounceState;
 	}
 
+	public void ToPlayerSneakState () {
+		Debug.Log ("player is now in sneak state");
+		player.transform.localScale -= (Vector3.up * 0.5f);
+		player.currentState = player.sneakState;
+	}
+
 	private void Transition () {
-		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
-			ToPlayerBounceState ();
+//		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
+//			ToPlayerBounceState ();
+		if (Input.GetKeyDown (KeyCode.C))
+			ToPlayerSneakState ();
 		if (player.rigidbody.velocity == Vector3.zero)
 			ToPlayerIdleState ();
 	}
@@ -123,7 +131,7 @@ public class PlayerWalkState : IPlayerState {
 
 			// move "forward" across object - parallel to face of obstacle based on angle
 			RaycastHit obstacle;
-			if (Physics.Raycast (player.transform.position, velocityChange, out obstacle, 1.25f))
+			if (Physics.Raycast (player.transform.GetChild(1).transform.position, velocityChange, out obstacle, 1.25f))
 				velocityChange = velocityChange - obstacle.normal * Vector3.Dot (velocityChange, obstacle.normal);
 
 			velocityChange = Quaternion.Euler (hit.normal) * velocityChange;

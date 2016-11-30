@@ -46,13 +46,14 @@ public class StatePatternPlayer : MonoBehaviour {
 	[HideInInspector] public Collider[] hitColliders;
 	[HideInInspector] public float distance = 5.0f;
 	[HideInInspector] public float thrust = 1024.0f;
-	[HideInInspector] public float smooth = 7.0f;
+	[HideInInspector] public float smooth = 10.0f;
 	[HideInInspector] public float rotation = 0.5f;
 	[HideInInspector] public bool carrying = false;
 
 	[HideInInspector] public IPlayerState currentState;
 	[HideInInspector] public PlayerIdleState idleState;
 	[HideInInspector] public PlayerWalkState walkState;
+	[HideInInspector] public PlayerSneakState sneakState;
 	[HideInInspector] public PlayerBounceState bounceState;
 	[HideInInspector] public PlayerHookState hookState;
 
@@ -63,6 +64,7 @@ public class StatePatternPlayer : MonoBehaviour {
 		idleState = new PlayerIdleState (this);
 		walkState = new PlayerWalkState (this);
 		bounceState = new PlayerBounceState (this);
+		sneakState = new PlayerSneakState (this);
 		hookState = new PlayerHookState (this);
 		distToGround = GetComponent<Collider> ().bounds.extents.y;
 	}

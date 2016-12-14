@@ -27,18 +27,21 @@ public class PlayerSneakState : IPlayerState {
 	public void ToPlayerIdleState () {
 		Debug.Log ("player is now in idle state");
 		player.transform.localScale += (Vector3.up * 0.5f);
+		player.distToGround += 0.5f;
 		player.currentState = player.idleState;
 	}
 
 	public void ToPlayerWalkState () {
 		Debug.Log ("player is now in walk state");
 		player.transform.localScale += (Vector3.up * 0.5f);
+		player.distToGround += 0.5f;
 		player.currentState = player.walkState;
 	}
 
 	public void ToPlayerHookState () {
 		Debug.Log ("player is now in hook state");
 		player.transform.localScale += (Vector3.up * 0.5f);
+		player.distToGround += 0.5f;
 		player.currentState = player.hookState;
 	}
 
@@ -47,6 +50,7 @@ public class PlayerSneakState : IPlayerState {
 		player.collided = false;
 		player.GetComponent<CapsuleCollider> ().material.bounciness = 1f;
 		player.transform.localScale += (Vector3.up * 0.5f);
+		player.distToGround += 0.5f;
 		player.currentState = player.bounceState;
 	}
 

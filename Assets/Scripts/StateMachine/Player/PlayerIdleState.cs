@@ -46,6 +46,7 @@ public class PlayerIdleState : IPlayerState {
 	public void ToPlayerSneakState () {
 		Debug.Log ("player is now in sneak state");
 		player.transform.localScale -= (Vector3.up * 0.5f);
+		player.distToGround -= 0.5f;
 		player.currentState = player.sneakState;
 	}
 

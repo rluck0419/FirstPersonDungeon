@@ -6,6 +6,7 @@ public class Door : MonoBehaviour {
 
 	// set this to -1 or 1 (left or right, respectively)
 	public float direction = 1f;
+	public bool zaxis = false;
 
 	private Vector3 openPosition;
 	private Vector3 closedPosition;
@@ -13,7 +14,11 @@ public class Door : MonoBehaviour {
 
 	void Start () {
 		closedPosition = transform.position;
-		openPosition = closedPosition + (Vector3.right * direction * 5f);
+		if (zaxis) {
+			openPosition = closedPosition + (Vector3.forward * direction * 5f);
+		} else {
+			openPosition = closedPosition + (Vector3.right * direction * 5f);
+		}
 	}
 
 	void OnTriggerEnter () {

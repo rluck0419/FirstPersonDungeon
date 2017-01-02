@@ -24,7 +24,7 @@ public class StatePatternPlayer : MonoBehaviour {
 	public float gravity = 10.0f;
 	public float maxVelocityChange = 10.0f;
 	public bool canJump = true;
-	public float jumpHeight = 3.0f;
+	public float jumpHeight = 2.0f;
 
 	[HideInInspector] public List<Collider> collidedPlats;
 	[HideInInspector] public int bounces = 0;

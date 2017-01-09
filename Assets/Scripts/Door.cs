@@ -5,7 +5,7 @@ public class Door : MonoBehaviour {
 	public float duration = 2f;
 
 	// set this to -1 or 1 (left or right, respectively)
-	public float direction = 1f;
+	public float direction = 1.0f;
 	public bool zaxis = false;
 
 	private Vector3 openPosition;
@@ -15,9 +15,9 @@ public class Door : MonoBehaviour {
 	void Start () {
 		closedPosition = transform.position;
 		if (zaxis) {
-			openPosition = closedPosition + (Vector3.forward * direction * 5f);
+			openPosition = closedPosition + (Vector3.forward * direction * 5.0f);
 		} else {
-			openPosition = closedPosition + (Vector3.right * direction * 5f);
+			openPosition = closedPosition + (Vector3.right * direction * 5.0f);
 		}
 	}
 

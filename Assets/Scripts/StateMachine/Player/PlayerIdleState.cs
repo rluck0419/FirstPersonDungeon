@@ -16,7 +16,11 @@ public class PlayerIdleState : IPlayerState {
 		if (player.carrying) {
 			CheckThrow ();
 			CheckDrop ();
-			Carry (player.carriedObject);
+			if (player.carriedObject.layer == 11) {
+				Platform (player.carriedObject);
+			} else {
+				Carry (player.carriedObject);
+			}
 		} else {
 			CheckInteraction ();
 		}
@@ -51,8 +55,8 @@ public class PlayerIdleState : IPlayerState {
 	}
 
 	private void Transition () {
-//		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
-//			ToPlayerBounceState ();
+		if (Input.GetKeyDown (KeyCode.LeftCommand) || Input.GetKeyDown (KeyCode.RightCommand))
+			ToPlayerBounceState ();
 		if (Input.GetKeyDown (KeyCode.C))
 			ToPlayerSneakState ();
 		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || player.rigidbody.velocity != Vector3.zero)
@@ -186,10 +190,25 @@ public class PlayerIdleState : IPlayerState {
 	}
 
 	private void Carry (GameObject o) {
-		if (player.carrying==true && player.carriedObject!=null) {
+		if (player.carrying==true && o) {
 			o.transform.position = Vector3.Lerp (
 				o.transform.position,
 				player.mainCamera.transform.position + (player.mainCamera.transform.forward * player.distance * 2f),
+				Time.deltaTime * player.smooth
+			);
+		}
+	}
+
+	private void Platform (GameObject o) {
+		if (player.carrying == true && o != null) {
+			o.transform.rotation = Quaternion.Euler(o.transform.rotation.eulerAngles.x, 0, 0);
+			o.transform.position = Vector3.Lerp (
+				o.transform.position,
+				new Vector3 (
+					player.mainCamera.transform.position.x + player.mainCamera.transform.forward.x * player.distance * 2f,
+					o.transform.position.y,
+					player.mainCamera.transform.position.z + player.mainCamera.transform.forward.z * player.distance * 2f
+				),
 				Time.deltaTime * player.smooth
 			);
 		}

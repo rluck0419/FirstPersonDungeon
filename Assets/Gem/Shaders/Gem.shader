@@ -1,3 +1,6 @@
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "FX/Gem"
 {
 	Properties {
@@ -31,13 +34,13 @@ Shader "FX/Gem"
 			v2f vert (float4 v : POSITION, float3 n : NORMAL)
 			{
 				v2f o;
-				o.pos = mul(UNITY_MATRIX_MVP, v);
+				o.pos = UnityObjectToClipPos(v);
 
 				// TexGen CubeReflect:
 				// reflect view direction along the normal, in view space.
 				float3 viewDir = normalize(ObjSpaceViewDir(v));
 				o.uv = -reflect(viewDir, n);
-				o.uv = mul(_Object2World, float4(o.uv,0));
+				o.uv = mul(unity_ObjectToWorld, float4(o.uv,0));
 				return o;
 			}
 
@@ -75,13 +78,13 @@ Shader "FX/Gem"
 			v2f vert (float4 v : POSITION, float3 n : NORMAL)
 			{
 				v2f o;
-				o.pos = mul(UNITY_MATRIX_MVP, v);
+				o.pos = UnityObjectToClipPos(v);
 
 				// TexGen CubeReflect:
 				// reflect view direction along the normal, in view space.
 				float3 viewDir = normalize(ObjSpaceViewDir(v));
 				o.uv = -reflect(viewDir, n);
-				o.uv = mul(_Object2World, float4(o.uv,0));
+				o.uv = mul(unity_ObjectToWorld, float4(o.uv,0));
 				o.fresnel = 1.0 - saturate(dot(n,viewDir));
 				return o;
 			}

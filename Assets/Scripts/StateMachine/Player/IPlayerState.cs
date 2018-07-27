@@ -14,4 +14,7 @@ public interface IPlayerState {
 	void ToPlayerHookState ();
 
 	void ToPlayerSneakState ();
+
+    void ToPlayerTargetState ();
+
 }

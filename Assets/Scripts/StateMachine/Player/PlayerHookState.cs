@@ -40,4 +40,10 @@ public class PlayerHookState : IPlayerState {
 		player.distToGround -= 0.5f;
 		player.currentState = player.sneakState;
 	}
+
+    public void ToPlayerTargetState()
+    {
+        Debug.Log("player is now in target state");
+        player.currentState = player.targetState;
+    }
 }
